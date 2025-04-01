@@ -1,6 +1,6 @@
 # CallCleaner
 
-CallCleaner, istenmeyen aramaları otomatik olarak tespit edip engelleyen akıllı bir mobil uygulamadır. Kullanıcıları rahatsız edici aramalardan korumak ve telefon deneyimini iyileştirmek için tasarlanmıştır.
+CallCleaner, istenmeyen aramaları arkaplanda otomatik olarak tespit edip engelleyen React Native tabanlı bir mobil uygulamadır. Kullanıcıları rahatsız edici spam aramalardan korumak ve telefon deneyimini iyileştirmek için tasarlanmıştır.
 
 ## 🌟 Özellikler
 
@@ -22,18 +22,55 @@ CallCleaner, istenmeyen aramaları otomatik olarak tespit edip engelleyen akıll
 ## 🛠️ Teknik Detaylar
 
 ### Gereksinimler
-- Android 6.0 ve üzeri
+- Android 6.0 ve üzeri / iOS 12 ve üzeri
 - İzinler:
-  - Telefon durumunu okuma
-  - Çağrıları yönetme
+  - Telefon durumunu okuma (Android)
+  - Çağrıları yönetme (Android)
+  - CallKit entegrasyonu (iOS)
   - İnternet erişimi
 
 ### Kullanılan Teknolojiler
-- Kotlin
-- Android Jetpack
-- Room Database
-- WorkManager
-- Material Design 3
+- React Native
+- TypeScript
+- React Navigation
+- Async Storage
+- React Native Permissions
+- React Native Background Tasks
+- CallKit (iOS)
+- Phone Call Broadcast Receiver (Android)
+
+## 💻 Kurulum
+
+```bash
+# Repository'yi klonlayın
+git clone https://github.com/denekserhat/CallCleaner.git
+
+# Proje dizinine gidin
+cd CallCleaner
+
+# Bağımlılıkları yükleyin
+npm install
+
+# iOS için pod kurulumu (macOS gereklidir)
+npx pod-install
+
+# Uygulamayı çalıştırın
+npm run android  # Android için
+# veya
+npm run ios      # iOS için
+```
+
+## 📱 Uygulama Yapısı
+
+src/
+├── assets/         # Görseller, fontlar ve diğer statik dosyalar
+├── components/     # Yeniden kullanılabilir UI bileşenleri
+├── navigation/     # Router ve navigasyon yapılandırması
+├── screens/        # Uygulama ekranları
+├── services/       # API ve yerel servisler
+├── store/          # Durum yönetimi
+├── theme/          # Stil sabitleri ve temalar
+└── utils/          # Yardımcı fonksiyonlar ve kütüphaneler
 
 ## 📝 Lisans
 
