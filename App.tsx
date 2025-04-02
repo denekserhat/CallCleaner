@@ -5,126 +5,89 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, StatusBar, StyleSheet, SafeAreaView} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+// Ekranlar
+import Dashboard from './src/screens/Dashboard';
+import BlockedCalls from './src/screens/BlockedCalls';
+import Settings from './src/screens/Settings';
+import Report from './src/screens/Report';
+import Onboarding from './src/screens/Onboarding';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+// Tema
+import {colors} from './src/theme';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+// Navigasyon için tip tanımları
+type RootStackParamList = {
+  Onboarding: undefined;
+  Dashboard: undefined;
+  BlockedCalls: undefined;
+  Settings: undefined;
+  Report: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  useEffect(() => {
+    // İlk kurulum kontrolü (gerçek uygulamada AsyncStorage kullanılabilir)
+    // Burada örnek olarak 3 saniye sonra yüklenmiş gibi davranıyoruz
+    const timer = setTimeout(() => {
+      setIsFirstLaunch(true); // İlk kurulum modunu değiştirmek için true yapabilirsiniz
+      setIsLoading(false);
+    }, 1000);
 
-  /*
-   * To keep the template simple and small we're adding padding to prevent view
-   * from rendering under the System UI.
-   * For bigger apps the reccomendation is to use `react-native-safe-area-context`:
-   * https://github.com/AppAndFlow/react-native-safe-area-context
-   *
-   * You can read more about it here:
-   * https://github.com/react-native-community/discussions-and-proposals/discussions/827
-   */
-  const safePadding = '5%';
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    // Yükleme ekranı
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+        <Text style={styles.loadingText}>SpamKilit Yükleniyor...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <View style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        style={backgroundStyle}>
-        <View style={{paddingRight: safePadding}}>
-          <Header/>
-        </View>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            paddingHorizontal: safePadding,
-            paddingBottom: safePadding,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </View>
+    <NavigationContainer>
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <Stack.Navigator
+        initialRouteName={isFirstLaunch ? 'Onboarding' : 'Dashboard'}
+        screenOptions={{
+          headerShown: false,
+          cardStyle: {backgroundColor: colors.background.primary},
+        }}>
+        {isFirstLaunch && (
+          <Stack.Screen name="Onboarding" component={Onboarding} />
+        )}
+        <Stack.Screen name="Dashboard" component={Dashboard} />
+        <Stack.Screen name="BlockedCalls" component={BlockedCalls} />
+        <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="Report" component={Report} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.background.primary,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
+  loadingText: {
     fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+    color: colors.text.primary,
+    fontWeight: '600',
   },
 });
 

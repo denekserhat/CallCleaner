@@ -1,4 +1,7 @@
 # CallCleaner
+Kendiniz 1 numarayı engelleyebilirsiniz.
+Ama toplu şekilde 10bin numarayı engelleyebiliriz.
+
 
 CallCleaner, istenmeyen aramaları arkaplanda otomatik olarak tespit edip engelleyen React Native tabanlı bir mobil uygulamadır. Kullanıcıları rahatsız edici spam aramalardan korumak ve telefon deneyimini iyileştirmek için tasarlanmıştır.
 
