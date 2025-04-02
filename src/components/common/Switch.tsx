@@ -41,14 +41,20 @@ const Switch: React.FC<SwitchProps> = ({
           </Text>
         )}
       </View>
-      <RNSwitch
-        value={value}
-        onValueChange={onValueChange}
-        disabled={disabled}
-        trackColor={{false: colors.gray.dark, true: colors.primaryLight}}
-        thumbColor={value ? colors.primary : colors.gray.light}
-        ios_backgroundColor={colors.gray.dark}
-      />
+      <View
+        style={[
+          styles.switchBorder,
+          {borderColor: value ? colors.primary : colors.gray.medium},
+        ]}>
+        <RNSwitch
+          value={value}
+          onValueChange={onValueChange}
+          disabled={disabled}
+          trackColor={{false: colors.gray.dark, true: colors.primaryLight}}
+          thumbColor={value ? colors.primary : colors.gray.light}
+          ios_backgroundColor={colors.gray.dark}
+        />
+      </View>
     </View>
   );
 };
@@ -73,6 +79,12 @@ const styles = StyleSheet.create({
   description: {
     fontSize: typography.fontSize.sm,
     color: colors.text.secondary,
+  },
+  switchBorder: {
+    borderWidth: 1,
+    borderRadius: 14,
+    padding: 1,
+    backgroundColor: 'transparent',
   },
 });
 

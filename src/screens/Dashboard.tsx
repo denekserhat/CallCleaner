@@ -1,10 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {colors, typography, spacing} from '../theme';
 import Header from '../components/common/Header';
@@ -45,42 +40,99 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
       />
 
       <View style={styles.container}>
-        {/* İstatistik Paneli */}
-        <Card variant="elevated" style={styles.statsCard}>
-          <View style={styles.iconContainer}>
-            <MaterialIcons name="block" size={60} color={colors.primary} />
+        <View style={styles.contentContainer}>
+          {/* Spam Engelleme Switch'i - Daha vurgulu hale getirildi */}
+          <View
+            style={[
+              styles.spamControlContainer,
+              !isActive && styles.spamControlContainerInactive,
+            ]}>
+            <View style={styles.spamSwitchRow}>
+              <MaterialIcons
+                name={isActive ? 'shield' : 'gpp-maybe'}
+                size={24}
+                color={isActive ? colors.primary : colors.danger}
+              />
+              <View style={styles.spamTextContainer}>
+                <Switch
+                  value={isActive}
+                  onValueChange={setIsActive}
+                  label="Spam Engelleme"
+                  description={isActive ? 'Koruma aktif' : 'Koruma kapalı!'}
+                  containerStyle={styles.switchContainer}
+                />
+              </View>
+            </View>
           </View>
 
-          <Text style={styles.statsPrimaryText}>
-            Bugün Engellenen Aramalar:{' '}
-            <Text style={styles.highlighted}>{blockedToday}</Text>
-          </Text>
+          {/* İstatistik Paneli - Yeniden düzenlendi */}
+          <Card variant="elevated" style={[styles.statsCard, !isActive && styles.disabledCard]}>
+            <View style={[styles.iconContainer, !isActive && styles.disabledIconContainer]}>
+              <MaterialIcons 
+                name="verified-user" 
+                size={60} 
+                color={isActive ? colors.primary : colors.text.disabled} 
+              />
+            </View>
 
-          <Text style={styles.statsSecondaryText}>
-            Bu Hafta: <Text style={styles.highlighted}>{blockedWeekly}</Text> |
-            Toplam: <Text style={styles.highlighted}>{blockedTotal}</Text>
-          </Text>
-        </Card>
+            <View style={styles.statsRow}>
+              <View style={styles.statItem}>
+                <Text style={[
+                  styles.statValue, 
+                  !isActive && styles.disabledText
+                ]}>{blockedToday}</Text>
+                <Text style={[
+                  styles.statLabel,
+                  !isActive && styles.disabledLabel
+                ]}>Bugün</Text>
+              </View>
 
-        {/* Hızlı Kontroller */}
-        <View style={styles.controlsContainer}>
-          <Switch
-            value={isActive}
-            onValueChange={setIsActive}
-            label="Spam Engelleme"
-            description={isActive ? 'Koruma aktif' : 'Koruma devre dışı'}
-          />
+              <View style={[
+                styles.statDivider,
+                !isActive && styles.disabledDivider
+              ]} />
 
+              <View style={styles.statItem}>
+                <Text style={[
+                  styles.statValue,
+                  !isActive && styles.disabledText
+                ]}>{blockedWeekly}</Text>
+                <Text style={[
+                  styles.statLabel,
+                  !isActive && styles.disabledLabel
+                ]}>Bu Hafta</Text>
+              </View>
+
+              <View style={[
+                styles.statDivider,
+                !isActive && styles.disabledDivider
+              ]} />
+
+              <View style={styles.statItem}>
+                <Text style={[
+                  styles.statValue,
+                  !isActive && styles.disabledText
+                ]}>{blockedTotal}</Text>
+                <Text style={[
+                  styles.statLabel,
+                  !isActive && styles.disabledLabel
+                ]}>Toplam</Text>
+              </View>
+            </View>
+          </Card>
+
+          {/* Hızlı Erişim Butonları */}
           <View style={styles.buttonsContainer}>
             <Button
               title="Son Engellenenler"
               onPress={handleBlockedCallsPress}
               variant="outline"
+              disabled={!isActive}
               leftIcon={
                 <MaterialIcons
                   name="history"
                   size={18}
-                  color={colors.primary}
+                  color={isActive ? colors.primary : colors.text.disabled}
                   style={styles.buttonIcon}
                 />
               }
@@ -91,6 +143,7 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
               title="Raporla"
               onPress={handleReportPress}
               variant="primary"
+              disabled={!isActive}
               leftIcon={
                 <MaterialIcons
                   name="report"
@@ -104,12 +157,16 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
           </View>
         </View>
 
-        {/* Bilgilendirme Kartı */}
-        <Card variant="outlined" style={styles.infoCard}>
+        {/* Bilgilendirme Kartı - En alta sabitlendi */}
+        <Card variant="outlined" style={[styles.infoCard, !isActive && styles.disabledCard]}>
           <View style={styles.infoRow}>
-            <MaterialIcons name="info" size={24} color={colors.secondary} />
-            <Text style={styles.infoText}>
-              Uygulama arkaplanda çalışarak spam aramalarını engeller.
+            <MaterialIcons 
+              name="info" 
+              size={24} 
+              color={isActive ? colors.secondary : colors.text.disabled} 
+            />
+            <Text style={[styles.infoText, !isActive && styles.disabledText]}>
+              Arkaplanda çalışarak yapay zeka desteğiyle tespit edilen spam aramalarını engeller.
             </Text>
           </View>
         </Card>
@@ -126,9 +183,49 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: spacing.md,
+    justifyContent: 'space-between',
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  infoCard: {
+    marginTop: spacing.md,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  infoText: {
+    flex: 1,
+    marginLeft: spacing.sm,
+    fontSize: typography.fontSize.md,
+    color: colors.text.secondary,
+  },
+  spamControlContainer: {
+    marginBottom: spacing.md,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+    padding: spacing.sm,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.primary,
+  },
+  spamControlContainerInactive: {
+    backgroundColor: '#FFF1F0',
+    borderLeftColor: colors.danger,
+  },
+  spamSwitchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  spamTextContainer: {
+    flex: 1,
+    marginLeft: spacing.sm,
+  },
+  switchContainer: {
+    paddingVertical: 0,
   },
   statsCard: {
-    marginTop: spacing.md,
+    marginBottom: spacing.lg,
     alignItems: 'center',
   },
   iconContainer: {
@@ -140,22 +237,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.md,
   },
-  statsPrimaryText: {
-    fontSize: typography.fontSize.lg,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.xs,
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    paddingHorizontal: spacing.sm,
   },
-  statsSecondaryText: {
-    fontSize: typography.fontSize.md,
-    color: colors.text.secondary,
+  statItem: {
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
   },
-  highlighted: {
+  statValue: {
+    fontSize: typography.fontSize.xxxl,
     fontWeight: '700',
     color: colors.primary,
   },
-  controlsContainer: {
-    marginTop: spacing.lg,
+  statLabel: {
+    fontSize: typography.fontSize.sm,
+    color: colors.text.secondary,
+    marginTop: spacing.xs,
+  },
+  statDivider: {
+    width: 1,
+    height: '80%',
+    backgroundColor: colors.gray.light,
+    alignSelf: 'center',
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -169,18 +275,21 @@ const styles = StyleSheet.create({
   buttonIcon: {
     marginRight: spacing.xs,
   },
-  infoCard: {
-    marginTop: spacing.lg,
+  disabledCard: {
+    backgroundColor: '#F5F5F5',
+    opacity: 0.7,
   },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  disabledIconContainer: {
+    backgroundColor: '#E0E0E0',
   },
-  infoText: {
-    flex: 1,
-    marginLeft: spacing.sm,
-    fontSize: typography.fontSize.sm,
-    color: colors.text.secondary,
+  disabledText: {
+    color: colors.text.disabled,
+  },
+  disabledLabel: {
+    color: colors.text.disabled,
+  },
+  disabledDivider: {
+    backgroundColor: '#E0E0E0',
   },
 });
 

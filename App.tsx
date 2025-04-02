@@ -39,7 +39,7 @@ function App(): React.JSX.Element {
     // İlk kurulum kontrolü (gerçek uygulamada AsyncStorage kullanılabilir)
     // Burada örnek olarak 3 saniye sonra yüklenmiş gibi davranıyoruz
     const timer = setTimeout(() => {
-      setIsFirstLaunch(true); // İlk kurulum modunu değiştirmek için true yapabilirsiniz
+      setIsFirstLaunch(false); // İlk kurulum modunu değiştirmek için true yapabilirsiniz
       setIsLoading(false);
     }, 1000);
 
