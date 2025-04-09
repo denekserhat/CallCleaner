@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {colors, typography, spacing} from '../theme';
@@ -6,6 +6,7 @@ import Header from '../components/common/Header';
 import Card from '../components/common/Card';
 import Switch from '../components/common/Switch';
 import Button from '../components/common/Button';
+import {getBlockedCallsStats} from '../services/blockedCallsService';
 
 type DashboardProps = {
   navigation?: any; // Navigation tipini ekleyecek olursak daha sonra yapacağız
@@ -13,11 +14,32 @@ type DashboardProps = {
 
 const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
   const [isActive, setIsActive] = useState(true);
+  const [stats, setStats] = useState({today: 0, thisWeek: 0, total: 0});
+  const [loadingStats, setLoadingStats] = useState(true);
 
-  // Örnek veriler
-  const blockedToday = 5;
-  const blockedWeekly = 23;
-  const blockedTotal = 142;
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoadingStats(true);
+        const fetchedStats = await getBlockedCallsStats();
+        setStats(fetchedStats);
+      } catch (error) {
+        console.error('İstatistikler çekilirken hata:', error);
+        // Hata yönetimi (örn: kullanıcıya mesaj gösterme)
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+
+    if (isActive) {
+      // Sadece aktifken istatistik çek
+      fetchStats();
+    } else {
+      // Switch kapalıysa istatistikleri sıfırla veya cache'den göster
+      setStats({today: 0, thisWeek: 0, total: 0});
+      setLoadingStats(false);
+    }
+  }, [isActive]); // isActive değiştiğinde tekrar çek
 
   const handleSettingsPress = () => {
     navigation?.navigate('Settings');
@@ -66,57 +88,67 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
           </View>
 
           {/* İstatistik Paneli - Yeniden düzenlendi */}
-          <Card variant="elevated" style={[styles.statsCard, !isActive && styles.disabledCard]}>
-            <View style={[styles.iconContainer, !isActive && styles.disabledIconContainer]}>
-              <MaterialIcons 
-                name="verified-user" 
-                size={60} 
-                color={isActive ? colors.primary : colors.text.disabled} 
+          <Card
+            variant="elevated"
+            style={[styles.statsCard, !isActive && styles.disabledCard]}>
+            <View
+              style={[
+                styles.iconContainer,
+                !isActive && styles.disabledIconContainer,
+              ]}>
+              <MaterialIcons
+                name="verified-user"
+                size={60}
+                color={isActive ? colors.primary : colors.text.disabled}
               />
             </View>
 
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
-                <Text style={[
-                  styles.statValue, 
-                  !isActive && styles.disabledText
-                ]}>{blockedToday}</Text>
-                <Text style={[
-                  styles.statLabel,
-                  !isActive && styles.disabledLabel
-                ]}>Bugün</Text>
+                <Text
+                  style={[styles.statValue, !isActive && styles.disabledText]}>
+                  {loadingStats ? '...' : stats.today}
+                </Text>
+                <Text
+                  style={[styles.statLabel, !isActive && styles.disabledLabel]}>
+                  Bugün
+                </Text>
               </View>
 
-              <View style={[
-                styles.statDivider,
-                !isActive && styles.disabledDivider
-              ]} />
+              <View
+                style={[
+                  styles.statDivider,
+                  !isActive && styles.disabledDivider,
+                ]}
+              />
 
               <View style={styles.statItem}>
-                <Text style={[
-                  styles.statValue,
-                  !isActive && styles.disabledText
-                ]}>{blockedWeekly}</Text>
-                <Text style={[
-                  styles.statLabel,
-                  !isActive && styles.disabledLabel
-                ]}>Bu Hafta</Text>
+                <Text
+                  style={[styles.statValue, !isActive && styles.disabledText]}>
+                  {loadingStats ? '...' : stats.thisWeek}
+                </Text>
+                <Text
+                  style={[styles.statLabel, !isActive && styles.disabledLabel]}>
+                  Bu Hafta
+                </Text>
               </View>
 
-              <View style={[
-                styles.statDivider,
-                !isActive && styles.disabledDivider
-              ]} />
+              <View
+                style={[
+                  styles.statDivider,
+                  !isActive && styles.disabledDivider,
+                ]}
+              />
 
               <View style={styles.statItem}>
-                <Text style={[
-                  styles.statValue,
-                  !isActive && styles.disabledText
-                ]}>{blockedTotal}</Text>
-                <Text style={[
-                  styles.statLabel,
-                  !isActive && styles.disabledLabel
-                ]}>Toplam</Text>
+                <Text
+                  style={[styles.statValue, !isActive && styles.disabledText]}>
+                  {loadingStats ? '...' : stats.total}
+                </Text>
+                <Text
+                  style={[styles.statLabel, !isActive && styles.disabledLabel]}>
+                  Toplam
+                </Text>
               </View>
             </View>
           </Card>
@@ -158,15 +190,18 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
         </View>
 
         {/* Bilgilendirme Kartı - En alta sabitlendi */}
-        <Card variant="outlined" style={[styles.infoCard, !isActive && styles.disabledCard]}>
+        <Card
+          variant="outlined"
+          style={[styles.infoCard, !isActive && styles.disabledCard]}>
           <View style={styles.infoRow}>
-            <MaterialIcons 
-              name="info" 
-              size={24} 
-              color={isActive ? colors.secondary : colors.text.disabled} 
+            <MaterialIcons
+              name="info"
+              size={24}
+              color={isActive ? colors.secondary : colors.text.disabled}
             />
             <Text style={[styles.infoText, !isActive && styles.disabledText]}>
-              Arkaplanda çalışarak yapay zeka desteğiyle tespit edilen spam aramalarını engeller.
+              Arkaplanda çalışarak yapay zeka desteğiyle tespit edilen spam
+              aramalarını engeller.
             </Text>
           </View>
         </Card>
