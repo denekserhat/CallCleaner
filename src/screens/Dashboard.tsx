@@ -53,6 +53,10 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
     navigation?.navigate('Report');
   };
 
+  const handleGoToLogin = () => {
+    navigation?.navigate('Login'); // Login ekranına git
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header
@@ -187,6 +191,15 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
               style={styles.button}
             />
           </View>
+
+          {/* !!! GEÇİCİ TEST BUTONU !!! */}
+          <Button
+            title="Login Ekranına Git (Test)"
+            onPress={handleGoToLogin}
+            variant="outline"
+            style={styles.testButton} // Yeni stil ekleyelim
+          />
+          {/* !!! GEÇİCİ TEST BUTONU BİTİŞ !!! */}
         </View>
 
         {/* Bilgilendirme Kartı - En alta sabitlendi */}
@@ -302,6 +315,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: spacing.md,
+    marginBottom: spacing.md,
   },
   button: {
     flex: 1,
@@ -309,6 +323,10 @@ const styles = StyleSheet.create({
   },
   buttonIcon: {
     marginRight: spacing.xs,
+  },
+  testButton: {
+    marginTop: spacing.lg,
+    borderColor: colors.warning,
   },
   disabledCard: {
     backgroundColor: '#F5F5F5',

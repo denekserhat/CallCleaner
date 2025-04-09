@@ -16,6 +16,7 @@ import BlockedCalls from './src/screens/BlockedCalls';
 import Settings from './src/screens/Settings';
 import Report from './src/screens/Report';
 import Onboarding from './src/screens/Onboarding';
+import Login from './src/screens/Login';
 
 // Tema
 import {colors} from './src/theme';
@@ -27,6 +28,7 @@ type RootStackParamList = {
   BlockedCalls: undefined;
   Settings: undefined;
   Report: undefined;
+  Login: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -72,6 +74,7 @@ function App(): React.JSX.Element {
         <Stack.Screen name="BlockedCalls" component={BlockedCalls} />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Report" component={Report} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );
