@@ -1,38 +1,81 @@
 import React, {useEffect} from 'react';
 import {View, ActivityIndicator, StyleSheet, StatusBar} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {verifyToken} from '../services/authService';
 import {colors} from '../theme';
+import { getAccessToken, getRefreshToken, clearAuthTokens, storeAccessToken, storeRefreshToken } from '../services/tokenService';
+import axios, { AxiosError } from 'axios';
+import { API_BASE_URL } from '../config/api';
 
 type AuthLoadingScreenProps = {
   navigation?: any;
+};
+
+const tryRefreshToken = async (): Promise<boolean> => {
+  try {
+    const refreshToken = await getRefreshToken();
+    if (!refreshToken) return false;
+
+    type RefreshResponse = {
+      userId: number;
+      fullName: string;
+      accessToken: string;
+      refreshToken: string;
+    };
+
+    const refreshApiClient = axios.create({ baseURL: API_BASE_URL });
+    const response = await refreshApiClient.post<RefreshResponse>('/api/auth/refresh-token', { refreshToken });
+
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
+
+    await storeAccessToken(newAccessToken);
+    if (newRefreshToken) {
+      await storeRefreshToken(newRefreshToken);
+    }
+    return true;
+
+  } catch (error) {
+    console.error('AuthLoading: Refresh token failed:', error);
+    await clearAuthTokens();
+    return false;
+  }
 };
 
 const AuthLoadingScreen: React.FC<AuthLoadingScreenProps> = ({navigation}) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const userToken = await AsyncStorage.getItem('userToken');
+        const accessToken = await getAccessToken();
 
-        if (userToken) {
-          // Token var, geçerliliğini kontrol et
+        if (accessToken) {
           try {
             await verifyToken();
-            // Token geçerli, Dashboard'a yönlendir
             navigation?.replace('Dashboard');
           } catch (verifyError) {
-            console.error('Token verification failed:', verifyError);
-            // Token geçersiz veya API hatası, Login'e yönlendir
-            await AsyncStorage.removeItem('userToken'); // Geçersiz token'ı temizle
-            navigation?.replace('Login');
+            const error = verifyError as AxiosError;
+            console.error('Token verification failed:', error.response?.status, error.message);
+
+            if (error.response?.status === 401) {
+              console.log('Access token expired or invalid, attempting refresh...');
+              const refreshed = await tryRefreshToken();
+              if (refreshed) {
+                console.log('Token refresh successful, navigating to Dashboard.');
+                navigation?.replace('Dashboard');
+              } else {
+                console.log('Token refresh failed, navigating to Login.');
+                navigation?.replace('Login');
+              }
+            } else {
+              console.log('Token verification failed with non-401 error, navigating to Login.');
+              await clearAuthTokens();
+              navigation?.replace('Login');
+            }
           }
         } else {
-          // Token yok, Login'e yönlendir
+          console.log('No access token found, navigating to Login.');
           navigation?.replace('Login');
         }
       } catch (error) {
-        console.error('Error reading token from storage:', error);
-        // AsyncStorage okuma hatası, yine de Login'e yönlendir
+        console.error('Error during auth status check:', error);
         navigation?.replace('Login');
       }
     };

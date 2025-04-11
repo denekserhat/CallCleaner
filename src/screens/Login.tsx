@@ -14,7 +14,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {colors, typography, spacing} from '../theme';
 import Button from '../components/common/Button';
 import {login} from '../services/authService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {storeAccessToken, storeRefreshToken} from '../services/tokenService';
 
 type LoginProps = {
   navigation?: any; // Veya daha spesifik bir tip kullanılabilir
@@ -32,17 +32,33 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
       return;
     }
 
+    // API'den dönen yanıtın tipini varsayalım (gerçek tipe göre güncelleyin)
+    type LoginResponse = {
+      userId: number; // veya string, API'ye göre ayarlayın
+      fullName: string;
+      accessToken: string; // 'token' yerine 'accessToken' oldu
+      refreshToken: string;
+      // Diğer kullanıcı bilgileri...
+    };
+
     setIsLoading(true);
     try {
       const response = await login({email, password});
-      // API'den dönen token'ı kaydet
-      if (response && response.token) {
-        await AsyncStorage.setItem('userToken', response.token);
+      const loginData = response as LoginResponse; // Tip dönüşümü
+
+      if (loginData && loginData.accessToken && loginData.refreshToken) {
+        // Access ve Refresh token'ları sakla
+        await storeAccessToken(loginData.accessToken);
+        await storeRefreshToken(loginData.refreshToken);
+
         // Başarılı girişte Dashboard'a yönlendir
         navigation?.replace('Dashboard'); // replace ile geri dönemez
       } else {
         // Token yoksa veya başka bir sorun varsa
-        Alert.alert('Giriş Başarısız', 'Token alınamadı veya geçersiz yanıt.');
+        Alert.alert(
+          'Giriş Başarısız',
+          'Token bilgileri alınamadı veya geçersiz yanıt.',
+        );
       }
     } catch (error: any) {
       console.error('Login error:', error);
