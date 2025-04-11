@@ -24,7 +24,7 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
         const fetchedStats = await getBlockedCallsStats();
         setStats(fetchedStats);
       } catch (error) {
-        console.error('İstatistikler çekilirken hata:', error);
+        // console.error('İstatistikler çekilirken hata:', error);
         // Hata yönetimi (örn: kullanıcıya mesaj gösterme)
       } finally {
         setLoadingStats(false);

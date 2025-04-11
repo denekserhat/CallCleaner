@@ -9,6 +9,7 @@ import React from 'react';
 import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import { navigationRef } from './src/services/NavigationService';
 
 // Ekranlar
 import Dashboard from './src/screens/Dashboard';
@@ -39,7 +40,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
       <Stack.Navigator
         initialRouteName="AuthLoadingScreen"

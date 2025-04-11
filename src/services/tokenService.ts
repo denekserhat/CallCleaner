@@ -9,7 +9,7 @@ export const storeAccessToken = async (token: string): Promise<void> => {
   try {
     await AsyncStorage.setItem(ACCESS_TOKEN_KEY, token);
   } catch (error) {
-    console.error('Error storing access token', error);
+    // console.error('Error storing access token', error);
   }
 };
 
@@ -17,7 +17,7 @@ export const getAccessToken = async (): Promise<string | null> => {
   try {
     return await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
   } catch (error) {
-    console.error('Error getting access token', error);
+    // console.error('Error getting access token', error);
     return null;
   }
 };
@@ -26,7 +26,7 @@ export const removeAccessToken = async (): Promise<void> => {
   try {
     await AsyncStorage.removeItem(ACCESS_TOKEN_KEY);
   } catch (error) {
-    console.error('Error removing access token', error);
+    // console.error('Error removing access token', error);
   }
 };
 
@@ -36,7 +36,7 @@ export const storeRefreshToken = async (token: string): Promise<void> => {
     // Keychain'e kullanıcı adı olarak servis adını, şifre olarak token'ı kaydet
     await Keychain.setGenericPassword(REFRESH_TOKEN_SERVICE, token, { service: REFRESH_TOKEN_SERVICE });
   } catch (error) {
-    console.error('Error storing refresh token', error);
+    // console.error('Error storing refresh token', error);
   }
 };
 
@@ -48,7 +48,7 @@ export const getRefreshToken = async (): Promise<string | null> => {
     }
     return null;
   } catch (error) {
-    console.error('Error getting refresh token', error);
+    // console.error('Error getting refresh token', error);
     return null;
   }
 };
@@ -57,7 +57,7 @@ export const removeRefreshToken = async (): Promise<void> => {
   try {
     await Keychain.resetGenericPassword({ service: REFRESH_TOKEN_SERVICE });
   } catch (error) {
-    console.error('Error removing refresh token', error);
+    // console.error('Error removing refresh token', error);
   }
 };
 

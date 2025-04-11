@@ -34,7 +34,7 @@ const tryRefreshToken = async (): Promise<boolean> => {
     return true;
 
   } catch (error) {
-    console.error('AuthLoading: Refresh token failed:', error);
+    // console.error('AuthLoading: Refresh token failed:', error);
     await clearAuthTokens();
     return false;
   }
@@ -52,7 +52,7 @@ const AuthLoadingScreen: React.FC<AuthLoadingScreenProps> = ({navigation}) => {
             navigation?.replace('Dashboard');
           } catch (verifyError) {
             const error = verifyError as AxiosError;
-            console.error('Token verification failed:', error.response?.status, error.message);
+            // console.error('Token verification failed:', error.response?.status, error.message);
 
             if (error.response?.status === 401) {
               console.log('Access token expired or invalid, attempting refresh...');
@@ -75,7 +75,7 @@ const AuthLoadingScreen: React.FC<AuthLoadingScreenProps> = ({navigation}) => {
           navigation?.replace('Login');
         }
       } catch (error) {
-        console.error('Error during auth status check:', error);
+        // console.error('Error during auth status check:', error);
         navigation?.replace('Login');
       }
     };

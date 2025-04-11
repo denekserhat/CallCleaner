@@ -79,7 +79,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
         [{text: 'Giriş Yap', onPress: () => navigation?.navigate('Login')}],
       );
     } catch (error: any) {
-      console.error('Reset Password error:', error);
+      // console.error('Reset Password error:', error);
       const errorMessage =
         error.response?.data?.error ||
         error.response?.data?.message ||

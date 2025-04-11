@@ -64,7 +64,7 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
       );
       // Veya direkt Login'e yönlendirme: navigation?.replace('Login');
     } catch (error: any) {
-      console.error('Register error:', error);
+      // console.error('Register error:', error);
       const errorMessage =
         error.response?.data?.error || // API'den gelen hata mesajı
         error.response?.data?.message || // Alternatif hata mesajı formatı

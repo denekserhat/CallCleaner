@@ -47,7 +47,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({navigation}) => {
         ],
       );
     } catch (error: any) {
-      console.error('Forgot Password error:', error);
+      // console.error('Forgot Password error:', error);
       const errorMessage =
         error.response?.data?.error ||
         error.response?.data?.message ||

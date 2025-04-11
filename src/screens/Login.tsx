@@ -61,7 +61,6 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
         );
       }
     } catch (error: any) {
-      console.error('Login error:', error);
       // API'den gelen hata mesajını göstermeye çalış
       const errorMessage = error.response?.data?.error || 'Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.';
       Alert.alert('Giriş Başarısız', errorMessage);
@@ -71,11 +70,11 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
   };
 
   const handleForgotPassword = () => {
-    navigation?.navigate('ForgotPassword'); // Şifremi Unuttum ekranına yönlendirme (oluşturulmalı)
+    navigation?.navigate('ForgotPassword');
   };
 
   const handleSignUp = () => {
-    navigation?.navigate('Register'); // Kayıt Ol ekranına yönlendirme (oluşturulmalı)
+    navigation?.navigate('Register');
   };
 
   return (
