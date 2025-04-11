@@ -90,7 +90,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
               size={80}
               color={colors.primary}
             />
-            <Text style={styles.title}>SpamKilit'e Giriş Yap</Text>
+            <Text style={styles.title}>SpamGuard'a Giriş Yap</Text>
             <Text style={styles.subtitle}>
               Hesabınıza erişmek için bilgilerinizi girin.
             </Text>

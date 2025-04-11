@@ -90,7 +90,7 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
              <MaterialIcons name="person-add" size={60} color={colors.primary} />
             <Text style={styles.title}>Hesap Oluştur</Text>
             <Text style={styles.subtitle}>
-              SpamKilit'e katılmak için bilgilerinizi girin.
+              SpamGuard'a katılmak için bilgilerinizi girin.
             </Text>
           </View>
 

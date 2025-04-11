@@ -60,7 +60,7 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header
-        title="SpamKilit"
+        title="SpamGuard"
         showSettingsButton
         onSettingsPress={handleSettingsPress}
       />
