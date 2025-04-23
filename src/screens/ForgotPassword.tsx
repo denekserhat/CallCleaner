@@ -73,14 +73,20 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({navigation}) => {
             <MaterialIcons name="lock-reset" size={60} color={colors.primary} />
             <Text style={styles.title}>Şifremi Unuttum</Text>
             <Text style={styles.subtitle}>
-              Hesabınıza ait e-posta adresini girin, size şifre sıfırlama talimatlarını gönderelim.
+              Hesabınıza ait e-posta adresini girin, size şifre sıfırlama
+              talimatlarını gönderelim.
             </Text>
           </View>
 
           {/* E-posta Formu */}
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
-              <MaterialIcons name="email" size={20} color={colors.gray.medium} style={styles.inputIcon} />
+              <MaterialIcons
+                name="email"
+                size={20}
+                color={colors.gray.medium}
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="E-posta Adresi"
@@ -107,8 +113,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({navigation}) => {
           />
 
           {/* Giriş Yap Ekranına Dön Linki */}
-          <TouchableOpacity style={styles.backButton} onPress={handleGoBackToLogin}>
-             <MaterialIcons name="arrow-back" size={18} color={colors.primary} />
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={handleGoBackToLogin}>
+            <MaterialIcons name="arrow-back" size={18} color={colors.primary} />
             <Text style={styles.backButtonText}> Giriş Yap Ekranına Dön</Text>
           </TouchableOpacity>
         </View>
@@ -179,11 +187,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: spacing.xl,
   },
-   backButtonText: {
+  backButtonText: {
     color: colors.primary,
     fontSize: typography.fontSize.md,
     fontWeight: '500',
   },
 });
 
-export default ForgotPassword; 
+export default ForgotPassword;

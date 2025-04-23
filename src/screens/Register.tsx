@@ -35,7 +35,12 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
   const confirmPasswordInputRef = useRef<TextInput>(null);
 
   const handleRegister = async () => {
-    if (!fullName.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+    if (
+      !fullName.trim() ||
+      !email.trim() ||
+      !password.trim() ||
+      !confirmPassword.trim()
+    ) {
       Alert.alert('Hata', 'Lütfen tüm alanları doldurun.');
       return;
     }
@@ -47,8 +52,8 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
 
     // Opsiyonel: Daha güçlü şifre kontrolü eklenebilir
     if (password.length < 6) {
-        Alert.alert('Hata', 'Şifre en az 6 karakter olmalıdır.');
-        return;
+      Alert.alert('Hata', 'Şifre en az 6 karakter olmalıdır.');
+      return;
     }
 
     setIsLoading(true);
@@ -87,7 +92,7 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
         <View style={styles.container}>
           {/* Başlık */}
           <View style={styles.headerContainer}>
-             <MaterialIcons name="person-add" size={60} color={colors.primary} />
+            <MaterialIcons name="person-add" size={60} color={colors.primary} />
             <Text style={styles.title}>Hesap Oluştur</Text>
             <Text style={styles.subtitle}>
               SpamGuard'a katılmak için bilgilerinizi girin.
@@ -97,7 +102,12 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
           {/* Kayıt Formu */}
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
-              <MaterialIcons name="person" size={20} color={colors.gray.medium} style={styles.inputIcon} />
+              <MaterialIcons
+                name="person"
+                size={20}
+                color={colors.gray.medium}
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="Tam Adınız"
@@ -111,7 +121,12 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
             </View>
 
             <View style={styles.inputContainer}>
-              <MaterialIcons name="email" size={20} color={colors.gray.medium} style={styles.inputIcon} />
+              <MaterialIcons
+                name="email"
+                size={20}
+                color={colors.gray.medium}
+                style={styles.inputIcon}
+              />
               <TextInput
                 ref={emailInputRef}
                 style={styles.input}
@@ -127,7 +142,12 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
             </View>
 
             <View style={styles.inputContainer}>
-              <MaterialIcons name="lock" size={20} color={colors.gray.medium} style={styles.inputIcon} />
+              <MaterialIcons
+                name="lock"
+                size={20}
+                color={colors.gray.medium}
+                style={styles.inputIcon}
+              />
               <TextInput
                 ref={passwordInputRef}
                 style={styles.input}
@@ -137,7 +157,7 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
                 onChangeText={setPassword}
                 secureTextEntry={!passwordVisible}
                 returnKeyType="next"
-                 onSubmitEditing={() => confirmPasswordInputRef.current?.focus()}
+                onSubmitEditing={() => confirmPasswordInputRef.current?.focus()}
               />
               <TouchableOpacity
                 onPress={() => setPasswordVisible(!passwordVisible)}
@@ -150,8 +170,13 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
               </TouchableOpacity>
             </View>
 
-             <View style={styles.inputContainer}>
-              <MaterialIcons name="lock-outline" size={20} color={colors.gray.medium} style={styles.inputIcon} />
+            <View style={styles.inputContainer}>
+              <MaterialIcons
+                name="lock-outline"
+                size={20}
+                color={colors.gray.medium}
+                style={styles.inputIcon}
+              />
               <TextInput
                 ref={confirmPasswordInputRef}
                 style={styles.input}
@@ -164,10 +189,14 @@ const Register: React.FC<RegisterProps> = ({navigation}) => {
                 onSubmitEditing={handleRegister} // Enter ile kayıt ol
               />
               <TouchableOpacity
-                onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+                onPress={() =>
+                  setConfirmPasswordVisible(!confirmPasswordVisible)
+                }
                 style={styles.eyeIconContainer}>
                 <MaterialIcons
-                  name={confirmPasswordVisible ? 'visibility-off' : 'visibility'}
+                  name={
+                    confirmPasswordVisible ? 'visibility-off' : 'visibility'
+                  }
                   size={24}
                   color={colors.gray.dark}
                 />
@@ -256,7 +285,7 @@ const styles = StyleSheet.create({
     padding: spacing.sm,
   },
   registerButton: {
-      marginTop: spacing.lg, // Yukarıdaki boşluk ayarlandı
+    marginTop: spacing.lg, // Yukarıdaki boşluk ayarlandı
   },
   loginContainer: {
     flexDirection: 'row',
@@ -275,4 +304,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register; 
+export default Register;

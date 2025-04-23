@@ -44,8 +44,8 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
     }
 
     if (code.length !== 6) {
-        Alert.alert('Hata', 'Doğrulama kodu 6 haneli olmalıdır.');
-        return;
+      Alert.alert('Hata', 'Doğrulama kodu 6 haneli olmalıdır.');
+      return;
     }
 
     if (newPassword !== confirmPassword) {
@@ -53,14 +53,17 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
       return;
     }
 
-     // Opsiyonel: Daha güçlü şifre kontrolü eklenebilir
+    // Opsiyonel: Daha güçlü şifre kontrolü eklenebilir
     if (newPassword.length < 6) {
-        Alert.alert('Hata', 'Yeni şifre en az 6 karakter olmalıdır.');
-        return;
+      Alert.alert('Hata', 'Yeni şifre en az 6 karakter olmalıdır.');
+      return;
     }
 
     if (!email) {
-      Alert.alert('Hata', 'E-posta adresi bulunamadı. Lütfen önceki adıma geri dönün.');
+      Alert.alert(
+        'Hata',
+        'E-posta adresi bulunamadı. Lütfen önceki adıma geri dönün.',
+      );
       return;
     }
 
@@ -90,9 +93,9 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
     }
   };
 
-    const handleGoBack = () => {
-        navigation?.goBack();
-    };
+  const handleGoBack = () => {
+    navigation?.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -101,18 +104,23 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
         style={styles.keyboardAvoid}>
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-             <MaterialIcons name="password" size={60} color={colors.primary} />
+            <MaterialIcons name="password" size={60} color={colors.primary} />
             <Text style={styles.title}>Yeni Şifre Belirle</Text>
             <Text style={styles.subtitle}>
               E-postanıza gönderilen 6 haneli kodu ve yeni şifrenizi girin.
             </Text>
-             {email && <Text style={styles.emailInfo}>E-posta: {email}</Text>}
+            {email && <Text style={styles.emailInfo}>E-posta: {email}</Text>}
           </View>
 
           <View style={styles.formContainer}>
             {/* Doğrulama Kodu */}
             <View style={styles.inputContainer}>
-              <MaterialIcons name="pin" size={20} color={colors.gray.medium} style={styles.inputIcon} />
+              <MaterialIcons
+                name="pin"
+                size={20}
+                color={colors.gray.medium}
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="6 Haneli Doğrulama Kodu"
@@ -128,7 +136,12 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
 
             {/* Yeni Şifre */}
             <View style={styles.inputContainer}>
-              <MaterialIcons name="lock" size={20} color={colors.gray.medium} style={styles.inputIcon} />
+              <MaterialIcons
+                name="lock"
+                size={20}
+                color={colors.gray.medium}
+                style={styles.inputIcon}
+              />
               <TextInput
                 ref={newPasswordInputRef}
                 style={styles.input}
@@ -153,7 +166,12 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
 
             {/* Yeni Şifre Tekrar */}
             <View style={styles.inputContainer}>
-              <MaterialIcons name="lock-outline" size={20} color={colors.gray.medium} style={styles.inputIcon} />
+              <MaterialIcons
+                name="lock-outline"
+                size={20}
+                color={colors.gray.medium}
+                style={styles.inputIcon}
+              />
               <TextInput
                 ref={confirmPasswordInputRef}
                 style={styles.input}
@@ -166,10 +184,14 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
                 onSubmitEditing={handleResetPassword}
               />
               <TouchableOpacity
-                onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+                onPress={() =>
+                  setConfirmPasswordVisible(!confirmPasswordVisible)
+                }
                 style={styles.eyeIconContainer}>
                 <MaterialIcons
-                  name={confirmPasswordVisible ? 'visibility-off' : 'visibility'}
+                  name={
+                    confirmPasswordVisible ? 'visibility-off' : 'visibility'
+                  }
                   size={24}
                   color={colors.gray.dark}
                 />
@@ -188,10 +210,13 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
           />
 
           <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-             <MaterialIcons name="arrow-back" size={18} color={colors.text.secondary} />
+            <MaterialIcons
+              name="arrow-back"
+              size={18}
+              color={colors.text.secondary}
+            />
             <Text style={styles.backButtonText}> Geri Dön</Text>
           </TouchableOpacity>
-
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -269,11 +294,11 @@ const styles = StyleSheet.create({
     marginTop: spacing.xl,
     paddingBottom: spacing.md,
   },
-   backButtonText: {
+  backButtonText: {
     color: colors.text.secondary, // Geri dön butonu daha az belirgin
     fontSize: typography.fontSize.md,
     fontWeight: '500',
   },
 });
 
-export default ResetPasswordScreen; 
+export default ResetPasswordScreen;

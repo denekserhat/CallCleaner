@@ -4,12 +4,12 @@ export const getBlockedCalls = async (page: number = 1, limit: number = 20) => {
   const response = await apiClient.get('/api/blocked-calls', {
     params: { page, limit }
   });
-  return response.data; // { calls: BlockedCallDTO[], pagination: {...} } dönecek
+  return response.data;
 };
 
 export const getBlockedCallsStats = async () => {
   const response = await apiClient.get('/api/blocked-calls/stats');
-  return response.data; // { today, thisWeek, total } dönecek
+  return response.data;
 };
 
 export const deleteBlockedCall = async (id: string) => {

@@ -62,7 +62,9 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
       }
     } catch (error: any) {
       // API'den gelen hata mesajını göstermeye çalış
-      const errorMessage = error.response?.data?.error || 'Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+      const errorMessage =
+        error.response?.data?.error ||
+        'Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.';
       Alert.alert('Giriş Başarısız', errorMessage);
     } finally {
       setIsLoading(false);
@@ -266,4 +268,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login; 
+export default Login;

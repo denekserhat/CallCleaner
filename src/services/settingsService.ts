@@ -8,7 +8,7 @@ import {
 
 export const getSettings = async () => {
   const response = await apiClient.get('/api/settings');
-  return response.data; // Settings object dönecek
+  return response.data;
 };
 
 export const updateBlockingMode = async (data: UpdateBlockingModeRequestDTO) => {
@@ -28,7 +28,7 @@ export const updateNotifications = async (data: UpdateNotificationsRequestDTO) =
 
 export const getWhitelist = async () => {
   const response = await apiClient.get('/api/settings/whitelist');
-  return response.data; // Whitelist array dönecek
+  return response.data;
 };
 
 export const addToWhitelist = async (data: AddToWhitelistRequestDTO) => {

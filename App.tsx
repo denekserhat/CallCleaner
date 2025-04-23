@@ -12,6 +12,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import { navigationRef } from './src/services/NavigationService';
 
 // Ekranlar
+import Onboarding from './src/screens/Onboarding';
 import Dashboard from './src/screens/Dashboard';
 import BlockedCalls from './src/screens/BlockedCalls';
 import Settings from './src/screens/Settings';
@@ -26,6 +27,7 @@ import {colors} from './src/theme';
 
 // Navigasyon için tip tanımları
 type RootStackParamList = {
+  Onboarding: undefined;
   AuthLoadingScreen: undefined;
   Dashboard: undefined;
   BlockedCalls: undefined;
@@ -43,11 +45,12 @@ function App(): React.JSX.Element {
     <NavigationContainer ref={navigationRef}>
       <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
       <Stack.Navigator
-        initialRouteName="AuthLoadingScreen"
+        initialRouteName="Onboarding"
         screenOptions={{
           headerShown: false,
           cardStyle: {backgroundColor: colors.background.primary},
         }}>
+        <Stack.Screen name="Onboarding" component={Onboarding} />
         <Stack.Screen name="AuthLoadingScreen" component={AuthLoadingScreen} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="BlockedCalls" component={BlockedCalls} />

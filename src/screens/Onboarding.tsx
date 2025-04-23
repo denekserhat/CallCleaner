@@ -6,10 +6,18 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Alert,
+  Platform,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {colors, typography, spacing} from '../theme';
 import Button from '../components/common/Button';
+import {
+  requestMultiple,
+  PERMISSIONS,
+  RESULTS,
+  Permission,
+  openSettings,
+} from 'react-native-permissions';
 
 type OnboardingProps = {
   navigation?: any;
@@ -80,15 +88,71 @@ const Onboarding: React.FC<OnboardingProps> = ({navigation}) => {
   };
 
   const handleFinish = () => {
-    // Ana ekrana yönlendirme
-    navigation?.navigate('Dashboard');
+    // İzinler alındıktan sonra AuthLoading ekranına yönlendir
+    navigation?.replace('AuthLoadingScreen');
   };
 
-  const handlePermissionRequest = () => {
+  // İzin isteme fonksiyonu
+  const requestPhonePermissions = async () => {
+    if (Platform.OS !== 'android') {
+      // iOS için CallKit kurulumu ve izni farklıdır.
+      // Şimdilik iOS'ta izin almadan devam edelim.
+      Alert.alert('iOS Notu', 'iOS üzerinde çağrı engelleme için farklı bir kurulum gereklidir.');
+      handleNext(); // Sonraki adıma geç
+      return;
+    }
+
+    // Android için gerekli izinler
+    const permissionsToRequest: Permission[] = [
+      PERMISSIONS.ANDROID.READ_PHONE_STATE,
+      PERMISSIONS.ANDROID.READ_CALL_LOG,
+      // Opsiyonel: Engelleme yönteminize göre ekleyebilirsiniz
+      // PERMISSIONS.ANDROID.CALL_PHONE,
+      // PERMISSIONS.ANDROID.ANSWER_PHONE_CALLS, (API 26+)
+      // PERMISSIONS.ANDROID.READ_PHONE_NUMBERS, (API 26+)
+    ];
+
     Alert.alert(
-      'İzin Talebi',
-      'Gerçek bir uygulamada burada izinler istenecek.',
-      [{text: 'Anladım'}],
+      'İzinler Gerekli',
+      'Spam çağrıları algılamak ve engellemek için telefon durumunuza ve çağrı geçmişinize erişim izni vermeniz gerekiyor.',
+      [
+        {
+          text: 'İzinleri İste',
+          onPress: async () => {
+            try {
+              const statuses = await requestMultiple(permissionsToRequest);
+
+              const allGranted = permissionsToRequest.every(
+                permission => statuses[permission] === RESULTS.GRANTED,
+              );
+
+              if (allGranted) {
+                Alert.alert('Başarılı', 'Gerekli izinler verildi.');
+                handleNext(); // Sonraki adıma geç
+              } else {
+                // İzinlerden en az biri reddedildi veya engellendi
+                Alert.alert(
+                  'İzin Reddedildi',
+                  'Uygulamanın düzgün çalışması için bu izinler gereklidir. İzinleri daha sonra uygulama ayarlarından verebilirsiniz.',
+                );
+                // İzinler verilmediği için uygulamayı burada bırakabilir veya kısıtlı modda devam edebiliriz.
+                // Şimdilik sonraki adıma geçelim, ancak özellik çalışmayacaktır.
+                // Kullanıcı bu adımda kalacak, handleNext() çağrılmayacak.
+              }
+            } catch (err) {
+              console.warn('İzin isteme hatası:', err);
+              Alert.alert('Hata', 'İzinler istenirken bir sorun oluştu.');
+            }
+          },
+        },
+        {
+          text: 'İptal',
+          style: 'cancel',
+          // İptal durumunda kullanıcı bu adımda kalacak.
+          onPress: () => {}
+        },
+      ],
+      { cancelable: false }
     );
   };
 
@@ -119,7 +183,12 @@ const Onboarding: React.FC<OnboardingProps> = ({navigation}) => {
 
             <View style={styles.permissionsContainer}>
               {step.permissions?.map((permission, index) => (
-                <View key={index} style={styles.permissionItem}>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.permissionItem}
+                  onPress={() => openSettings()}
+                  activeOpacity={0.7}
+                >
                   <MaterialIcons
                     name={permission.icon}
                     size={36}
@@ -134,7 +203,7 @@ const Onboarding: React.FC<OnboardingProps> = ({navigation}) => {
                       {permission.description}
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           </View>
@@ -181,8 +250,7 @@ const Onboarding: React.FC<OnboardingProps> = ({navigation}) => {
             variant="primary"
             size="large"
             onPress={() => {
-              handlePermissionRequest();
-              handleNext();
+              requestPhonePermissions();
             }}
           />
         );

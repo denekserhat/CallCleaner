@@ -10,10 +10,10 @@ export const getRecentCallsForReport = async (limit: number = 10) => {
   const response = await apiClient.get('/api/reports/recent-calls', {
     params: { limit }
   });
-  return response.data; // Array of { phoneNumber, timestamp }
+  return response.data;
 };
 
 export const getSpamTypes = async () => {
   const response = await apiClient.get('/api/reports/spam-types');
-  return response.data; // Array of { id, label }
+  return response.data;
 }; 

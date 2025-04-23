@@ -2,9 +2,15 @@ import React, {useEffect} from 'react';
 import {View, ActivityIndicator, StyleSheet, StatusBar} from 'react-native';
 import {verifyToken} from '../services/authService';
 import {colors} from '../theme';
-import { getAccessToken, getRefreshToken, clearAuthTokens, storeAccessToken, storeRefreshToken } from '../services/tokenService';
-import axios, { AxiosError } from 'axios';
-import { API_BASE_URL } from '../config/api';
+import {
+  getAccessToken,
+  getRefreshToken,
+  clearAuthTokens,
+  storeAccessToken,
+  storeRefreshToken,
+} from '../services/tokenService';
+import axios, {AxiosError} from 'axios';
+import {API_BASE_URL} from '../config/api';
 
 type AuthLoadingScreenProps = {
   navigation?: any;
@@ -22,17 +28,20 @@ const tryRefreshToken = async (): Promise<boolean> => {
       refreshToken: string;
     };
 
-    const refreshApiClient = axios.create({ baseURL: API_BASE_URL });
-    const response = await refreshApiClient.post<RefreshResponse>('/api/auth/refresh-token', { refreshToken });
+    const refreshApiClient = axios.create({baseURL: API_BASE_URL});
+    const response = await refreshApiClient.post<RefreshResponse>(
+      '/api/auth/refresh-token',
+      {refreshToken},
+    );
 
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
+    const {accessToken: newAccessToken, refreshToken: newRefreshToken} =
+      response.data;
 
     await storeAccessToken(newAccessToken);
     if (newRefreshToken) {
       await storeRefreshToken(newRefreshToken);
     }
     return true;
-
   } catch (error) {
     // console.error('AuthLoading: Refresh token failed:', error);
     await clearAuthTokens();
@@ -55,17 +64,23 @@ const AuthLoadingScreen: React.FC<AuthLoadingScreenProps> = ({navigation}) => {
             // console.error('Token verification failed:', error.response?.status, error.message);
 
             if (error.response?.status === 401) {
-              console.log('Access token expired or invalid, attempting refresh...');
+              console.log(
+                'Access token expired or invalid, attempting refresh...',
+              );
               const refreshed = await tryRefreshToken();
               if (refreshed) {
-                console.log('Token refresh successful, navigating to Dashboard.');
+                console.log(
+                  'Token refresh successful, navigating to Dashboard.',
+                );
                 navigation?.replace('Dashboard');
               } else {
                 console.log('Token refresh failed, navigating to Login.');
                 navigation?.replace('Login');
               }
             } else {
-              console.log('Token verification failed with non-401 error, navigating to Login.');
+              console.log(
+                'Token verification failed with non-401 error, navigating to Login.',
+              );
               await clearAuthTokens();
               navigation?.replace('Login');
             }
@@ -100,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AuthLoadingScreen; 
+export default AuthLoadingScreen;
